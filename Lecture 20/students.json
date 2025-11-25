@@ -1,0 +1,36 @@
+{
+    "students": [
+        {
+            "name": "John",
+            "age": 20,
+            "grades": [
+                55,
+                65,
+                80,
+                75
+            ],
+            "status": true,
+            "pay": 1000.0,
+            "course": {
+                "name": "Python",
+                "duration": 3
+            }
+        },
+        {
+            "name": "Walter",
+            "age": 25,
+            "grades": [
+                52,
+                48,
+                67,
+                73
+            ],
+            "status": false,
+            "pay": 1000.0,
+            "course": {
+                "name": "Python",
+                "duration": 3
+            }
+        }
+    ]
+}
