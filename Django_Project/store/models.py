@@ -7,6 +7,11 @@ class Category(models.Model):
 
     class Meta:
         db_table = 'categories'
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
+
+    def __str__(self):
+        return self.title
 
 class Product(models.Model):
     title = models.CharField(max_length=30)
@@ -20,3 +25,28 @@ class Product(models.Model):
 
     class Meta:
         db_table = 'products'
+        verbose_name = 'product'
+        verbose_name_plural = 'products'
+
+    def __str__(self):
+        return f"{self.category} --> {self.title}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
