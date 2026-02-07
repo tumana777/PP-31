@@ -13,4 +13,8 @@ class AddProductForm(forms.ModelForm):
         model = Product
         # fields = ['title', 'quantity', 'price', 'description', 'category']
         exclude = ['is_available']
-        widgets = {}
+
+class UpdateProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
