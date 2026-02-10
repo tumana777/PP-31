@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from store.models import Product
@@ -108,12 +109,13 @@ class ProductDetailView(DetailView):
     #     product = get_object_or_404(Product, pk=self.kwargs['product_pk'], is_available=True)
     #     return product
 
-class AddProductView(CreateView):
+class AddProductView(LoginRequiredMixin, CreateView):
     model = Product
     # form_class = AddProductForm
     fields = '__all__'
     template_name = 'add_product.html'
     success_url = '/products'
+    login_url = reverse_lazy('user:login')
 
     # def form_valid(self, form):
     #     """If the form is valid, save the associated model."""
