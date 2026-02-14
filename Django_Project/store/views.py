@@ -38,7 +38,7 @@ def add_product(request):
     if request.method == 'POST':
         # print(request.POST)
 
-        form = AddProductForm(request.POST)
+        form = AddProductForm(request.POST, request.FILES)
 
         if form.is_valid():
             product = form.save(commit=False)
@@ -62,7 +62,7 @@ def update_product(request, product_pk):
     if request.method == 'POST':
         # print(request.POST)
 
-        form = AddProductForm(request.POST, instance=product)
+        form = AddProductForm(request.POST, request.FILES, instance=product,)
 
         if form.is_valid():
             form.save()
@@ -87,7 +87,7 @@ class ProductListView(ListView):
     model = Product
     template_name = 'products.html'
     context_object_name = 'products'
-    queryset = Product.objects.filter(is_available=True).select_related('category')
+    queryset = Product.objects.filter(is_available=True).select_related('category').prefetch_related('tags')
     ordering = ['-created_at']
 
     # def get_queryset(self):
