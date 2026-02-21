@@ -4,53 +4,68 @@
 {% block content %}
     <h2>Here are total products({{ count }}):</h2>
         <div class="row">
-            {% for product in products %}
-                <div class="col-md-4">
-                    <div class="card mb-3" style="width: 18rem;">
-                      {% if product.image %}
-                          <img src="{{ product.image.url }}" class="card-img-top image-wrapper" alt="{{ product.title }}">
-                      {% endif %}
-                      <div class="card-body">
-                        <h5 class="card-title">{{ product.title }}</h5>
-                        <p class="card-text">{{ product.description|truncatechars:40 }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="{% url 'store:product_detail' product_pk=product.pk %}" class="btn btn-primary">Details</a>
-                            {% for tag in product.tags.all %}
-                                <span class="badge bg-secondary">{{ tag }}</span>
-                            {% endfor %}
+            <div class="col-md-3">
+                <form>
+                    <input class="form-control mb-2" type="number" name="min_price" placeholder="Min Price" value="{{ request.GET.min_price }}">
+                    <input class="form-control mb-2" type="number" name="max_price" placeholder="Max Price" value="{{ request.GET.max_price }}">
+                    <input class="form-control mb-2" type="number" name="quantity" placeholder="Quantity" value="{{ request.GET.quantity }}">
+                    <input type="hidden" name="q" value="{{ request.GET.q }}">
+                    <button class="btn btn-success">Filter</button>
+                </form>
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    {% for product in products %}
+                    <div class="col-md-4">
+                        <div class="card mb-3" style="width: 18rem;">
+                          {% if product.image %}
+                              <img src="{{ product.image.url }}" class="card-img-top image-wrapper" alt="{{ product.title }}">
+                          {% endif %}
+                          <div class="card-body">
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <p class="card-text">{{ product.description|truncatechars:40 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{% url 'store:product_detail' product_pk=product.pk %}" class="btn btn-primary">Details</a>
+                                {% for tag in product.tags.all %}
+                                    <span class="badge bg-secondary">{{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                          </div>
                         </div>
-                      </div>
                     </div>
+                {% endfor %}
                 </div>
-            {% endfor %}
+            </div>
         </div>
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-          {% if page_obj.has_previous %}
-              <li class="page-item"><a class="page-link" href="?page=1">&laquo;First</a></li>
-              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-          {% else %}
-              <li class="page-item disabled"><a class="page-link" >&laquo;First</a></li>
-              <li class="page-item disabled"><a class="page-link" >Previous</a></li>
-          {% endif %}
-
-          {% for num in paginator.page_range  %}
-              {% if num == page_obj.number %}
-                  <li class="page-item active"><a class="page-link">{{ num }}</a></li>
-              {% elif  num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
-                  <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+    {% if is_paginated %}
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              {% if page_obj.has_previous %}
+                  <li class="page-item"><a class="page-link" href="?page=1">&laquo;First</a></li>
+                  <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+              {% else %}
+                  <li class="page-item disabled"><a class="page-link" >&laquo;First</a></li>
+                  <li class="page-item disabled"><a class="page-link" >Previous</a></li>
               {% endif %}
-          {% endfor %}
 
-          {% if page_obj.has_next %}
-              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-              <li class="page-item"><a class="page-link" href="?page={{ paginator.num_pages }}">Last&raquo;</a></li>
-          {% else %}
-              <li class="page-item disabled"><a class="page-link" >Next</a></li>
-              <li class="page-item disabled"><a class="page-link" >Last&raquo;</a></li>
-          {% endif %}
-      </ul>
-    </nav>
+              {% for num in paginator.page_range  %}
+                  {% if num == page_obj.number %}
+                      <li class="page-item active"><a class="page-link">{{ num }}</a></li>
+                  {% elif  num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                      <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                  {% endif %}
+              {% endfor %}
+
+              {% if page_obj.has_next %}
+                  <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                  <li class="page-item"><a class="page-link" href="?page={{ paginator.num_pages }}">Last&raquo;</a></li>
+              {% else %}
+                  <li class="page-item disabled"><a class="page-link" >Next</a></li>
+                  <li class="page-item disabled"><a class="page-link" >Last&raquo;</a></li>
+              {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
     <hr>
     <a class="btn btn-primary mb-3" href="{% url 'store:add_product' %}">Add New Product</a>
 {% endblock %}

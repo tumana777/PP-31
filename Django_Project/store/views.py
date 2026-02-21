@@ -5,6 +5,7 @@ from store.models import Product
 from store.forms import AddProductForm, UpdateProductForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
+from django.db.models import Q
 
 # def index(request):
 #     return HttpResponse('<h1>Hello, world.</h1>')
@@ -87,17 +88,38 @@ class ProductListView(ListView):
     model = Product
     template_name = 'products.html'
     context_object_name = 'products'
-    queryset = Product.objects.filter(is_available=True).select_related('category').prefetch_related('tags')
+    # queryset = Product.objects.filter(is_available=True).select_related('category').prefetch_related('tags')
     ordering = ['-created_at']
-    paginate_by = 2
+    # paginate_by = 2
 
-    # def get_queryset(self):
-    #     products = Product.objects.filter(is_available=True).select_related('category')
-    #     return products
+    def get_queryset(self):
+        all_products = Product.objects.filter(is_available=True).select_related('category').prefetch_related('tags')
+
+        search_query = self.request.GET.get('q')
+
+        if search_query:
+            all_products = all_products.filter(Q(title__icontains=search_query) | Q(description__icontains=search_query))
+
+        min_price = self.request.GET.get('min_price')
+
+        if min_price:
+            all_products = all_products.filter(price__gte=min_price)
+
+        max_price = self.request.GET.get('max_price')
+
+        if max_price:
+            all_products = all_products.filter(price__lte=max_price)
+
+        quantity = self.request.GET.get('quantity')
+
+        if quantity:
+            all_products = all_products.filter(quantity=quantity)
+
+        return all_products
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['count'] = self.queryset.count()
+        context['count'] = self.get_queryset().count()
         return context
 
 class ProductDetailView(DetailView):
