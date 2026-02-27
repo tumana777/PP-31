@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path
-from user.views import UserRegisterView, UserLoginView
+from user.views import UserRegisterView, UserLoginView, activate_user
 
 app_name = 'user'
 
@@ -8,4 +8,5 @@ urlpatterns = [
     path('register/', UserRegisterView.as_view(), name='register'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
+    path('activate/<int:user_pk>/<str:token>/', activate_user, name='activate'),
 ]

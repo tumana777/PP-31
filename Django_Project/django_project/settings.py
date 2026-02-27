@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'crispy_forms',
     'crispy_bootstrap5',
+    'rest_framework'
 ]
 
 # AUTH_USER_MODEL = 'user.CustomUser'
@@ -155,3 +156,11 @@ INTERNAL_IPS = [
 ]
 
 SESSION_COOKIE_AGE = 30
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
