@@ -1,10 +1,12 @@
 from django.db.models import Count
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from api.serializers import (
     CategoryListSerializer, ProductListSerializer, ProductDetailSerializer,
@@ -83,8 +85,9 @@ class ProductRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.select_related('category').prefetch_related('tags').order_by('-created_at')
     serializer_class = ProductDetailSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     lookup_field = 'title'
+    authentication_classes = [SessionAuthentication, JWTAuthentication]
 
     def get_serializer_class(self):
         if self.action == 'list':

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import environ
 import os
@@ -53,7 +53,9 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'crispy_forms',
     'crispy_bootstrap5',
-    'rest_framework'
+    'rest_framework',
+    'drf_spectacular',
+    'rest_framework_simplejwt'
 ]
 
 # AUTH_USER_MODEL = 'user.CustomUser'
@@ -157,7 +159,18 @@ INTERNAL_IPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 5
+    'PAGE_SIZE': 5,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Store API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
 }
 
 # SESSION_COOKIE_AGE = 30
